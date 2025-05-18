@@ -1,11 +1,22 @@
-# ベースイメージ（Java 17）
-FROM openjdk:21-jdk-slim
+# ベースイメージ
+FROM gradle:8.5-jdk21 AS builder
 
-# 作業ディレクトリを作成
 WORKDIR /app
 
-# jarファイルをコンテナにコピー（名前は適宜変更）
-COPY build/libs/*.jar app.jar
+# プロジェクト全体をコピー
+COPY . .
 
-# アプリケーションを実行
+# ビルド（jar作成）
+RUN gradle build --no-daemon
+
+# ==================
+# 実行用イメージ
+# ==================
+FROM openjdk:21-jdk-slim
+
+WORKDIR /app
+
+# builderステージからjarをコピー
+COPY --from=builder /app/build/libs/*.jar app.jar
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
