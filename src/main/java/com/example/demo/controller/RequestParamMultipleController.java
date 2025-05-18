@@ -10,7 +10,7 @@ import com.example.demo.form.SampleForm;
 public class RequestParamMultipleController {
 	
 	// GET かつ [url：/multiple]
-	@GetMapping("multiple")
+	@GetMapping("/")
 	public String showView() {
 		// 戻り値は「ビュー名」を返す
 		return "entry";
